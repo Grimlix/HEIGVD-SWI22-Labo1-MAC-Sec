@@ -169,6 +169,10 @@ __Question__ : Expliquer l'effet de cette attaque sur la cible
 
 Elle va se désauthentifier et va donc refaire un 4-way handshake afin de s'authentifier à nouveau.
 
+https://www.thepythoncode.com/article/force-a-device-to-disconnect-scapy
+
+https://github.com/catalyst256/MyJunk/blob/master/scapy-deauth.py
+
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 
