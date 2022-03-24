@@ -86,12 +86,59 @@ Le corps de la trame (Frame body) contient, entre autres, un champ de deux octet
 | 39 | Requested from peer QSTA due to timeout                                                                                                                                              |
 | 40 | Peer QSTA does not support the requested cipher suite                                                                                                                                              |
 | 46-65535 | Reserved                                                                                                                                              |
- 
+
 a) Utiliser la fonction de déauthentification de la suite aircrack, capturer les échanges et identifier le Reason code et son interpretation.
+
+Voici la commande utilisée pour déauthentifier un client d'un Access Point spécifique :
+
+```aireplay-ng -0 1 -a <MAC_ACCESS_POINT> -c <MAC_CIBLE> <INTERFACE NAME>```
+
+-  -0 veut dire deauthentification
+-  1 c'est le nombre de déhautentification qu'on lance
+-  -a pour l'adresse MAC de l'access point
+-  -c pour l'adresse MAC de la cible
+
+https://www.aircrack-ng.org/doku.php?id=deauthentication
+
+Maintenant il faut que l'on trouve les adresses MACs que nous voulons. Pour la cible c'est assez simple, nous l'avons récupéré avec la commande ```ifconfig```. C'est également possible de la trouver dans les réglages Wi-Fi (cela depend de l'OS et/ou de la distribution).
+
+![](./images/MAC_c.png)
+
+Afin de trouver le BSSID de l'access point il est possible de le trouver directement dans les réglages Wi-Fi. Cependant si ce n'est pas possible, comme dans le cas d'une distribution PopOS!, on peut utiliser la commande ```nmcli -f SSID,BSSID,ACTIVE dev wifi list | grep HEIG-VD```
+
+![](./images/BSSID.png)
+
+La commande finale ressemble à ça :
+
+``aireplay-ng -00 -a 7C:95:F3:00:79:DF -c 28:11:A8:5A:D7:D2 wlan0mon``
+
+Cependant l'access point était en 5GHz sur un canal 100 et le monitor n'est que sur du 2.4GHz. Nous avons alors trouvé un autre access point sur 2.4 sur le canal 11. Nous avons alors mis le monitor sur le canal 11.
 
 __Question__ : quel code est utilisé par aircrack pour déauthentifier un client 802.11. Quelle est son interpretation ?
 
+Le code utilisé par aircrack est le 7, il signifie que le client a tenté de transférer des données avant d'être associé à l'acces point.
+
+![](./images/dehaut5.png)
+
 __Question__ : A l'aide d'un filtre d'affichage, essayer de trouver d'autres trames de déauthentification dans votre capture. Avez-vous en trouvé d'autres ? Si oui, quel code contient-elle et quelle est son interpretation ?
+
+Nous utilisons ce filtre là afin de n'avoir que les trames de déhautentification :
+```(wlan.fc.type == 0) && (wlan.fc.type_subtype == 0x0c)```
+
+Nous avons laissé tourner wireshark pendant un moment et nous avons sniffé plusieurs déhautentification, celle-ci possède le *Reason Code* n°1 - sans raison spécifique.
+
+![](./images/dehaut1.png)
+
+Une autre possède le *Reason Code* n°2 - le client est associé mais n'est pas autorisé.
+
+![](./images/dehaut2.png)
+Une autre avec le *Reason Code* inconnu :
+
+![](./images/dehaut3.png)
+
+Une autre avec le *Reason Code* 15 - 4way handhsake timeout
+
+![](./images/dehauth4.png)
 
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
@@ -150,7 +197,7 @@ A des fins plus discutables du point de vue éthique, la détection de client s'
 ### 4. Probe Request Evil Twin Attack
 
 Nous allons nous intéresser dans cet exercice à la création d'un evil twin pour viser une cible que l'on découvre dynamiquement utilisant des probes.
- 
+
 Développer un script en Python/Scapy capable de detecter une STA cherchant un SSID particulier - proposer un evil twin si le SSID est trouvé (i.e. McDonalds, Starbucks, etc.).
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
