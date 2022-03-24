@@ -140,6 +140,8 @@ Une autre avec le *Reason Code* 15 - 4way handhsake timeout
 
 ![](./images/dehauth4.png)
 
+https://support.zyxel.eu/hc/fr/articles/360009469759-Quelle-est-la-signification-des-codes-de-motif-de-d%C3%A9sauthentification-802-11-
+
 b) Développer un script en Python/Scapy capable de générer et envoyer des trames de déauthentification. Le script donne le choix entre des Reason codes différents (liste ci-après) et doit pouvoir déduire si le message doit être envoyé à la STA ou à l'AP :
 
 * 1 - Unspecified
@@ -149,13 +151,23 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
+Le code 5 car c'est l'access point qui a un problème et donc la STA doit être notifié afin qu'elle se désauthentifie.
+
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
+
+Les codes 1, 4 et 8 car dans tous ces cas c'est la STA qui a un problème/est dans un état qui l'amène à se désauthentifier.
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
 
+En utilisant l'adresse MAC de broadcast en tant que cible. 
+
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 
+Le code 8 c'est parce que la STA a trouvé un nouvel AP donc elle abandonne l'ancien AP (volontaire). Et dans le code 3 c'est parce que l'AP est indisponible (involontaire).
+
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+
+Elle va se désauthentifier et va donc refaire un 4-way handshake afin de s'authentifier à nouveau.
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
