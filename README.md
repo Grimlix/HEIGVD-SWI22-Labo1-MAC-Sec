@@ -182,7 +182,18 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 * Générer un beacon concurrent annonçant un réseau sur un canal différent se trouvant à 6 canaux de séparation du réseau original
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
+Une cible pourrait se connecter  à notre faux AP à la place de l'AP qu'elle avait l'intention d'utiliser. Cela peut permettre de faire des attaques Man-in-the-middle où de voler les credentials de la cible en reproduisant une page d'authentification de l'AP originel qui s'ouvre à la connexion à l'AP.
 
+
+Voici une démonstration du fonctionnement de notre script FakeChanel:
+* Il se peut que la première fois qu'on lance le script un message d'erreur disant que le network est down apparaisse. Il suffit de relancer une deuxième fois le script et cela foncitonne. Nous n'avons pas trouvé pourquoi il se comportait comme ça.
+* Lancement du script avec la commande `sudo pyhton3 FakeChanel.py -i wlan0mon`
+* Nous allons choisir de spoofer l'AP dont le SSID est **swissagnet**, son channel est le 6, donc on devrait spoofer un AP avec le même SSID, le channel 12 et la MAC 22:22:22:22:22:22 (valeur fixe utilisée pour différencier les deux APs)
+* La frame pour spoofer l'AP est ensuite envoyée en continue
+* ![](.README_images/evilchanel.png)
+* Pour vérifier que cela fonctionne, on lance en parallèle un autre scan `Scan.py` qui fonctionne de la même façon pour découvrir les APs à proximité.
+* Nous voyons bien qu'il y a un deuxième AP dont l'SSID est **swissagnet** sur le channel 12 avec l'adresse MAC 22:22:22:22:22:22
+* ![](.README_images/evilchanelverif.png)
 
 ### 3. SSID flood attack
 
