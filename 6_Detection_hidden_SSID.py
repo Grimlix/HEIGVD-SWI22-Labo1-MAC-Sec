@@ -66,8 +66,8 @@ def PacketHandler(pkt):
                 hidden_ssid.append(AP(mac_ap, ssid))
                 print("Found a hidden BSSID %s" % mac_ap)
 
-        # Si c'est une Probe Request on veut comparer les BSSID afin de trouvé le SSID
-        # correspondantau
+        # Si c'est une Probe Response on veut comparer les BSSID afin de trouvé le SSID
+        # correspondant 
         elif pkt.haslayer(Dot11ProbeResp):
             for ap in hidden_ssid:
                 if ap.BSSID == mac_ap:

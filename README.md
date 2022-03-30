@@ -340,7 +340,7 @@ On voit tout d'abord les BSSID qu'on a trouvé n'ayant pas de SSID, il faut main
 
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
 
-Nous utilisons les trames Beacons afin de trouver le BSSID d'un AP hidden. Pour savoir s'il est caché il suffit de regarder son SSID qui est vide ou plus exactement ```"\x00"``` . On stock alors les BSSID caché qu'on trouve et on vérifie également les Probe Response. Le but est de recevoir une Probe Request d'une STA voulant se connecter à notre AP cachée. On compare alors les BSSID cachés trouvés avec celui de la trame et si c'est les mêmes on a trouvé notre SSID correspondant.
+Nous utilisons les trames Beacons afin de trouver le BSSID d'un AP hidden. Pour savoir s'il est caché il suffit de regarder son SSID qui est vide ou plus exactement ```"\x00"``` . On stock alors les BSSID cachés qu'on trouve et on vérifie également les Probe Response. Le but est de recevoir une Probe Response d'une STA voulant se connecter à notre AP cachée. On compare alors les BSSID cachés trouvés avec celui de la trame et si c'est les mêmes on a trouvé notre SSID correspondant.
 
 ## Livrables
 
