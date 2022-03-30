@@ -4,7 +4,7 @@
 import argparse
 
 from scapy.all import *
-from scapy.layers.dot11 import RadioTap, Dot11, Dot11Beacon, Dot11Elt
+from scapy.layers.dot11 import RadioTap, Dot11, Dot11Beacon, Dot11Elt, Dot11ProbeReq
 
 # Passing arguments
 parser = argparse.ArgumentParser(prog="Scapy fake evil tween attack",
@@ -19,22 +19,31 @@ args = parser.parse_args()
 
 IFACE_NAME = args.Interface
 
+# Si jamais l'interface est down
+os.system("ifconfig %s up" % IFACE_NAME)
+#Launch airodump-ng en background / screen permet de ne pas afficher sur la console le process passé en argument
+p = subprocess.Popen(['screen','-d','-m','airodump-ng',IFACE_NAME])
+
 ap_bssid_list = []
 ap_list = []
 
 def PacketHandler(pkt):
-    if pkt.haslayer(Dot11):
-        if pkt.type == 0 and pkt.subtype == 8:  # Probe Request
+    if pkt.haslayer(Dot11ProbeReq):
+        mac = str(pkt.addr2)
+        if pkt.haslayer(Dot11Elt):
             if pkt.addr2 not in ap_bssid_list:
                 ap_bssid_list.append(pkt.addr2)
 
+                ADDR2 = pkt.addr2
                 BSSID = pkt.addr3
                 SSID = pkt.info.decode("utf-8")
                 #channel = pkt.channel
-                print("MAC: %s \t SSID: %s" % (BSSID, SSID))
+                print("MAC: %s \t ADDR2: %s \t SSID: %s" % (BSSID, ADDR2, SSID))
 
 
 sniff(iface=IFACE_NAME, prn=PacketHandler)
+
+p.kill()
 
 
 

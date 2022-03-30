@@ -199,6 +199,24 @@ Voici une démonstration du fonctionnement de notre script FakeChanel:
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
+On a lancé le code avec génération de 3 SSID aléatoires.
+
+![](./images/start1.png)
+
+Voici le résultat depuis mon téléphone 
+
+![](./images/wifi_2.png)
+
+Ensuite on a essayé avec un fichier 
+
+![](./images/test3.png)
+
+Voici le résultat :
+
+![](./images/ssid_list.png)
+
+Toute cette partie est faite en mode monitor avec channel hopping car on veut envoyer les beacons sur tous les canaux pour essayer d'atteindre le plus de STA possible.
+
 
 ## Partie 2 - probes
 

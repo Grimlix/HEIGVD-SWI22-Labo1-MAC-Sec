@@ -19,7 +19,10 @@ args = parser.parse_args()
 
 IFACE_NAME = args.Interface
 
+# Si jamais l'interface est down
+os.system("ifconfig %s up" % IFACE_NAME)
 #Launch airodump-ng en background / screen permet de ne pas afficher sur la console le process passé en argument
+#Pour le scan on se met en channel hopping afin d'en trouver un maximum.
 p = subprocess.Popen(['screen','-d','-m','airodump-ng',IFACE_NAME])
 
 check_list = []
@@ -34,7 +37,7 @@ class AP:
         self.channel = channel
 
 def PacketHandler(pkt):
-    if pkt.haslayer(Dot11):
+    if pkt.haslayer(Dot11Beacon):
         if pkt.type == 0 and pkt.subtype == 8:  # Probe Request
             if pkt.addr2 not in check_list: #La liste ne contient pas de doublon
                 check_list.append(pkt.addr2)
@@ -76,7 +79,6 @@ else:
 
 #lance airodump sur le bon channel
 p = subprocess.Popen(['screen','-d','-m','airodump-ng','--channel', str(beacon_channel), IFACE_NAME])
-
 
 #Préparation de la frame à envoyer
 netSSID = ap_list[choice].SSID  #SSID de l'AP à spoof
