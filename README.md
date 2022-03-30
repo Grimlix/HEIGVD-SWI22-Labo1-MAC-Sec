@@ -149,6 +149,10 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 5 - Disassociated because AP is unable to handle all currently associated stations
 * 8 - Deauthenticated because sending STA is leaving BSS
 
+**Fonctionnement:**
+
+//TODO
+
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
 Le code 5 car c'est l'access point qui a un problème et donc la STA doit être notifié afin qu'elle se désauthentifie.
@@ -184,20 +188,35 @@ a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 Une cible pourrait se connecter  à notre faux AP à la place de l'AP qu'elle avait l'intention d'utiliser. Cela peut permettre de faire des attaques Man-in-the-middle où de voler les credentials de la cible en reproduisant une page d'authentification de l'AP originel qui s'ouvre à la connexion à l'AP.
 
+**Fonctionnement:**
 
-Voici une démonstration du fonctionnement de notre script FakeChanel:
-* Il se peut que la première fois qu'on lance le script un message d'erreur disant que le network est down apparaisse. Il suffit de relancer une deuxième fois le script et cela foncitonne. Nous n'avons pas trouvé pourquoi il se comportait comme ça.
-* Lancement du script avec la commande `sudo pyhton3 FakeChanel.py -i wlan0mon`
+```sudo python3 2_fake_channel_evil_tween.py -i wlan0mon```
+
+```sudo python3 2_fake_channel_evil_tween.py -i wlan0mon -t 50```
+
 * Nous allons choisir de spoofer l'AP dont le SSID est **swissagnet**, son channel est le 6, donc on devrait spoofer un AP avec le même SSID, le channel 12 et la MAC 22:22:22:22:22:22 (valeur fixe utilisée pour différencier les deux APs)
+
 * La frame pour spoofer l'AP est ensuite envoyée en continue
-* ![](.README_images/evilchanel.png)
+
+  ![](.README_images/evilchanel.png)
+
 * Pour vérifier que cela fonctionne, on lance en parallèle un autre scan `Scan.py` qui fonctionne de la même façon pour découvrir les APs à proximité.
+
 * Nous voyons bien qu'il y a un deuxième AP dont l'SSID est **swissagnet** sur le channel 12 avec l'adresse MAC 22:22:22:22:22:22
-* ![](.README_images/evilchanelverif.png)
+
+  ![](.README_images/evilchanelverif.png)
+
+  //TODO Normalement on mettrait la même adresse MAC que l'AP spoofé ? Ou toute façon dans un vrai cas on doit mettre notre adresse MAC ?
 
 ### 3. SSID flood attack
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
+
+**Fonctionnement:**
+
+```sudo python3 3_SSID_flooding.py -i wlan0mon```
+
+```sudo python3 3_SSID_flooding.py -i wlan0mon -f file.txt``` 
 
 On a lancé le code avec génération de 3 SSID aléatoires.
 
@@ -211,11 +230,11 @@ Ensuite on a essayé avec un fichier
 
 ![](./images/test3.png)
 
-Voici le résultat :
+Voici le résultat depuis mon laptop:
 
 ![](./images/ssid_list.png)
 
-Toute cette partie est faite en mode monitor avec channel hopping car on veut envoyer les beacons sur tous les canaux pour essayer d'atteindre le plus de STA possible.
+Toute cette partie est faite en mode monitor avec channel hopping car on veut envoyer les beacons sur tous les canaux pour essayer d'atteindre le plus de STA possible. 
 
 
 ## Partie 2 - probes
@@ -247,14 +266,40 @@ Développer un script en Python/Scapy capable de detecter une STA cherchant un S
 
 Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twin, vous pouvez très probablement réutiliser du code des exercices précédents ou vous servir d'un outil existant.
 
+**Fonctionnement:**
+
+```sudo python3 4_Detect_probeRequest_evil_tween.py -i wlan0mon -ssid McDo```
+
+```sudo python3 4_Detect_probeRequest_evil_tween.py -i wlan0mon -ssid McDo -t 100```
+
+Nous commençons par lancer le programme avec un temps de recherche de 30 secondes (par default) et le SSID McDo. Et j'essaie de me connecter avec mon téléphone sur le SSID McDo pour simuler une recherche active d'un SSID. Voici le résultat :
+
+![](./images/mcdodetect.png)
+
+Le programme me demande si je veux en créer un evil tween, ce que je fais. On voit ensuite McDo dans ma liste des réseaux disponibles :
+
+![](./images/mcdodetect2.png)
+
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
 
+Ce sont des requêtes dans le but de trouver une AP, un échange de clés cryptographiques n'a pas encore pu être fait. On ne peut donc pas chiffrer ces trames sinon les AP ne les comprendraient pas.
+
 __Question__ : pourquoi les dispositifs iOS et Android récents ne peuvent-ils plus être tracés avec cette méthode ?
+
+Car les nouvelles versions randomisent leur adresse MAC, on ne peut donc pas récupérer ses informations. Par exemple si on veut identifier la présence de ce même dispositif à des différents endroits géographiques on ne pourra pas car ce n'est jamais la même adresse.
 
 
 ### 5. Détection de clients et réseaux
 
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
+
+**Fonctionnement:**
+
+```sudo python3 5.a_Detection_probeRequest.py -i wlan0mon -ssid Wifi_Gratuit```
+
+Comme pour la partie 4, on a juste essayé de se connecter manuellement depuis un téléphone et un ordinateur après avoir lancé le script.
+
+![](./images/test33.png)
 
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
@@ -266,14 +311,36 @@ B8:17:C2:EB:8F:8F &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
 00:0E:35:C8:B8:66 &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; 08:EC:F5:28:1A:EF
 
+**Fonctionnement:**
+
+```sudo python3 5.b_Detection_STA_and_link_AP.py -i wlan0mon```
+
+Résultat après avoir lancé le programme:
+
+![](./images/5.b.1.png)
+
+Il trouve plusieurs STA linké avec un AP, on peut vérifier en regardant wireshark :
+
+![](./images/5.b.2.png)
+
 
 ### 6. Hidden SSID reveal (exercices challenge optionnel - donne droit à un bonus)
 
 Développer un script en Python/Scapy capable de reveler le SSID correspondant à un réseau configuré comme étant "invisible".
 
+**Fonctionnement:**
+
+```sudo python3 6_Detection_hidden_SSID.py -i wlan0mon```
+
+```sudo python3 6_Detection_hidden_SSID.py -i wlan0mon -t 10000```
+
+On voit tout d'abord les BSSID qu'on a trouvé n'ayant pas de SSID, il faut maintenant attendre qu'une Probe Request arrive. Nous avons simulé l'AP hidden avec un téléphone Android, et nous avons pu nous y connecté ensuite pour trouver le SSID.
+
+![](./images/hiddenSSID.png)
+
 __Question__ : expliquer en quelques mots la solution que vous avez trouvée pour ce problème ?
 
-
+Nous utilisons les trames Beacons afin de trouver le BSSID d'un AP hidden. Pour savoir s'il est caché il suffit de regarder son SSID qui est vide ou plus exactement ```"\x00"``` . On stock alors les BSSID caché qu'on trouve et on vérifie également les Probe Response. Le but est de recevoir une Probe Request d'une STA voulant se connecter à notre AP cachée. On compare alors les BSSID cachés trouvés avec celui de la trame et si c'est les mêmes on a trouvé notre SSID correspondant.
 
 ## Livrables
 
