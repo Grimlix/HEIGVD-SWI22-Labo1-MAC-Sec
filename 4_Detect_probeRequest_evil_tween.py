@@ -97,8 +97,6 @@ def evil_tween(ssid):
 ################## main ##################
 
 sniff(iface=IFACE_NAME, prn=PacketHandler, timeout=timeout)
- 
-
 
 
 

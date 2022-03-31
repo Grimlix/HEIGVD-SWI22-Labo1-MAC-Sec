@@ -170,27 +170,34 @@ Lancement du script, lors du lancement il nous demande quel type de Reason Code 
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
-Le code 5 car c'est l'access point qui a un problème et donc la STA doit être notifié afin qu'elle se désauthentifie.
+Les Reason Coe 1, 4 et 5.
+
+- 1 - Unspecified : ce code pourrait être envoyé par les deux car la raison n'est pas spécifiée. Dans le script nous l'avons mis dans cette catégorie.
+- 4 - Disassociated due to inactivity :  ce code est envoyé par l'AP à la STA quand celle-ci est inactive depuis un moment pour libérer un peu de place à l'AP.
+- 5 - Disassociated because AP is unable to handle all currently associated stations : ce code montre que l'AP a un soucis et c'est donc elle qui va notifier une STA afin qu'elle se désauthentifie.
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à l'AP et pourquoi ?
 
-Les codes 1, 4 et 8 car dans tous ces cas c'est la STA qui a un problème/est dans un état qui l'amène à se désauthentifier.
+Les Reason Code 1 et 8.
+
+- 1 - Unspecified : comme dit auparavant, on ne connaît pas la raison- La trame pourrait être envoyée par les deux côtés.
+- 8 - Deauthenticated because sending STA is leaving BSS : ici c'est la STA qui a un soucis et qui doit annoncer à l'AP qu'il se désauthentifie.
 
 __Question__ : Comment essayer de déauthentifier toutes les STA ?
 
-En utilisant l'adresse MAC de broadcast en tant que cible. 
+En utilisant l'adresse MAC de broadcast (**FF:FF:FF:FF:FF:FF**) en tant que cible. 
 
 __Question__ : Quelle est la différence entre le code 3 et le code 8 de la liste ?
 
-Le code 8 c'est parce que la STA a trouvé un nouvel AP donc elle abandonne l'ancien AP (volontaire). Et dans le code 3 c'est parce que l'AP est indisponible (involontaire).
+Dans les deux cas la raison est que la STA sort d'un réseau. Dans le cas 3 la STA sort (ou est sorti) d'un IBSS ou ESS alors que dans le cas 8 il sort d'un BSS. Pour comprendre la différence il faut comprendre ce qu'est un réseau **IBSS** , **ESS** et un **BSS**.
+
+- IBSS (Independant Basic Service set) : quand deux ou plusieurs appareils se connectent directement sans AP (ad hoc).
+- BSS (Basic Service Set) : quand des clients se connecte à un réseau via un AP. C'est ce qui est utilisé pour la plupart des réseau wifi. 
+- ESS (Extended Service Set) : quand plusieurs STA recoivent le signal d'un seul SSID et ils créent un WLAN entre eux. 
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
-Elle va se désauthentifier et va donc refaire un 4-way handshake afin de s'authentifier à nouveau. Nous pouvons dans ce cas récup
-
-https://www.thepythoncode.com/article/force-a-device-to-disconnect-scapy
-
-https://github.com/catalyst256/MyJunk/blob/master/scapy-deauth.py
+Lorsqu'on lance cette attaque, elle va désauthentifier la cible. Quand nous avons testé cela n'a pas toujours marché et cela dépend également de quel Reason Code on utilise. Donc elle va se désauthentifier et va  refaire un 4-way handshake afin de s'authentifier à nouveau. C'est à ce moment là qu'on va pouvoir récupérer le 4-way handshake afin de récupérer des informations sur les clés que nous pourront alors essayer de déchiffrer à côté. On pourrait également générer un AP spoofé, puis on désauthentifie la cible de l'AP qu'on a spoofé. Lorsque la cible va s'authentifier à nouveau il peut le faire sur notre AP au lieu de la réele.
 
 ### 2. Fake channel evil tween attack
 a)	Développer un script en Python/Scapy avec les fonctionnalités suivantes :
