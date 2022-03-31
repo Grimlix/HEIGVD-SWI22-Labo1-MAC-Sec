@@ -1,5 +1,15 @@
-#!/usr/bin/env python3 
-# TODO : J'arrive toujours pas a kill le processus avec une interruption..
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Created By  : Nicolas Hungerbühler & Lucas Gianinetti
+# Created Date: 31.03.22
+# ---------------------------------------------------------------------------
+# Ce programme permet de réveler le SSID correspondant à un réseau configuré
+# comme étant invisible
+# Il prend en paramètre une interface réseau (/!\ Doit être en mode
+# monitor channel hopping /!\), et le temps pendant lequel il scan
+# ---------------------------------------------------------------------------
+
 
 import argparse
 from faker import Faker
@@ -34,12 +44,7 @@ class AP:
         self.BSSID = BSSID
         self.SSID = SSID
 
-# Si jamais l'interface est down
-#os.system("ifconfig %s up" % IFACE_NAME)
-#Launch airodump-ng en background / screen permet de ne pas afficher sur la console le process passé en argument
-#p = subprocess.Popen(['screen','-d','-m','airodump-ng',IFACE_NAME])
 
-####################################
 ################## fonctions ##################
 
 def PacketHandler(pkt):
@@ -75,8 +80,6 @@ def PacketHandler(pkt):
                     print("BSSID : %s \t SSID : %s" % (ap.BSSID, ap.SSID))
                     break
             
-
-####################################
 ################## main ##################
 
 sniff(iface=IFACE_NAME, prn=PacketHandler, timeout=int(timeout))

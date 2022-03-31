@@ -1,5 +1,14 @@
 #!/usr/bin/env python3 
-# TODO : J'arrive toujours pas a kill le processus avec une interruption..
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Created By  : Nicolas Hungerbühler & Lucas Gianinetti
+# Created Date: 31.03.22
+# ---------------------------------------------------------------------------
+# Ce programme liste toutes les stations cherchant activement le SSID passé
+# en paramètre.
+# Il prend en paramètre une interface réseau (/!\ Doit être en mode
+# monitor channel hopping /!\), et un SSID
+# ---------------------------------------------------------------------------
 
 import argparse
 from faker import Faker
@@ -21,7 +30,6 @@ parser.add_argument("-ssid", "--SSIDname", required=True,
 
 args = parser.parse_args()
 
-####################################
 ################## variables ##################
 
 IFACE_NAME = args.Interface
@@ -29,12 +37,7 @@ SSID_chosen = args.SSIDname
 
 sta_list = []
 
-# Si jamais l'interface est down
-#os.system("ifconfig %s up" % IFACE_NAME)
-#Launch airodump-ng en background / screen permet de ne pas afficher sur la console le process passé en argument
-#p = subprocess.Popen(['screen','-d','-m','airodump-ng',IFACE_NAME])
 
-####################################
 ################## fonctions ##################
 
 def PacketHandler(pkt):
@@ -54,7 +57,6 @@ def PacketHandler(pkt):
                 sta_list.append(sta)
                 print("STA (%s) is looking for the given SSID (%s)" % (sta, ssid))
 
-####################################
 ################## main ##################
 
 sniff(iface=IFACE_NAME, prn=PacketHandler)

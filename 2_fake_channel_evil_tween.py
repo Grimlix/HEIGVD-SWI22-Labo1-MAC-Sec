@@ -4,7 +4,9 @@
 # Created By  : Nicolas Hungerbühler & Lucas Gianinetti
 # Created Date: 31.03.22
 # ---------------------------------------------------------------------------
-# Ce programme prend en paramètre une interface réseau (/!\ Doit être en mode 
+# Ce programme listes les APs à proximité et ensuite crée un faux clone de
+# l'AP sélectionné par l'utilisateur parmis la liste affichée.
+# Il prend en paramètre une interface réseau (/!\ Doit être en mode
 # monitor channel hopping /!\) et optionnellement combien de temps il doit scanner 
 # Ce script scan les alentours pour des APs pendant un certain temps, si il
 # en trouve il les liste et propose d'en spoofer un. Il faut donner l'ID de l'AP

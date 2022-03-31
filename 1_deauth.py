@@ -4,7 +4,9 @@
 # Created By  : Nicolas Hungerbühler & Lucas Gianinetti
 # Created Date: 31.03.22
 # ---------------------------------------------------------------------------
-# Ce programme prend en paramètre une interface réseau (/!\ Doit être en mode 
+# Ce programme va envoyer des requêtes de déauthentification d'un client à un
+# AP.
+# Il prend en paramètre une interface réseau (/!\ Doit être en mode
 # monitor channel hopping /!\), une adresse MAC cible. une addresse MAC d'un AP et 
 # optionnellement un nombre de requêtes de désauthentification.
 # Le programme demande quel Reason Code veut être utilisé puis crée la trame et 

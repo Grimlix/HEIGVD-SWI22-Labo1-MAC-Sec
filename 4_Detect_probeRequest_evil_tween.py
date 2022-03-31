@@ -1,5 +1,15 @@
 #!/usr/bin/env python3 
-# TODO : J'arrive toujours pas a kill le processus avec une interruption..
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Created By  : Nicolas Hungerbühler & Lucas Gianinetti
+# Created Date: 31.03.22
+# ---------------------------------------------------------------------------
+# Ce programme détecte une STA cherchant un SSID particulier. Si il en trouve
+# une, il proposera de faire un evil twin attack avec cet SSID.
+# Il prend en paramètre une interface réseau (/!\ Doit être en mode
+# monitor channel hopping /!\) ainsi qu'un timeout pendant lequel il détecte
+# ---------------------------------------------------------------------------
+
 
 import argparse
 from faker import Faker

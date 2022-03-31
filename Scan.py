@@ -1,3 +1,13 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Created By  : Nicolas Hungerbühler & Lucas Gianinetti
+# Created Date: 31.03.22
+# ---------------------------------------------------------------------------
+# Ce programme liste les MACs et les SSIDs des APs à proximité
+# Il prend en paramètre une interface réseau (/!\ Doit être en mode
+# monitor channel hopping /!\)
+# ---------------------------------------------------------------------------
 # https://www.thepythoncode.com/article/create-fake-access-points-scapy
 # https://www.4armed.com/blog/forging-wifi-beacon-frames-using-scapy/
 
@@ -7,9 +17,9 @@ from scapy.all import *
 from scapy.layers.dot11 import RadioTap, Dot11, Dot11Beacon, Dot11Elt
 
 # Passing arguments
-parser = argparse.ArgumentParser(prog="Scapy fake evil tween attack",
+parser = argparse.ArgumentParser(prog="scan",
                                  usage="%(prog)s -i wlan0mon",
-                                 description="Scapy bases fake evil tween attack",
+                                 description="scan",
                                  allow_abbrev=False)
 
 parser.add_argument("-i", "--Interface", required=True,

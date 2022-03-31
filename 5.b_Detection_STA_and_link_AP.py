@@ -1,6 +1,15 @@
-#!/usr/bin/env python3 
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Created By  : Nicolas Hungerbühler & Lucas Gianinetti
+# Created Date: 31.03.22
+# ---------------------------------------------------------------------------
+# Ce programme liste les APs et stations à proximité. Il indique quelle
+# station est connectée à quel AP.
+# Il prend en paramètre une interface réseau (/!\ Doit être en mode
+# monitor channel hopping /!\), et un SSID
+# ---------------------------------------------------------------------------
 # https://stackoverflow.com/questions/52981542/python-scapy-distinguish-between-acesspoint-to-station
-# TODO : J'arrive toujours pas a kill le processus avec une interruption..
 
 import argparse
 
@@ -18,19 +27,13 @@ parser.add_argument("-i", "--Interface", required=True,
 
 args = parser.parse_args()
 
-####################################
 ################## variables ##################
 
 IFACE_NAME = args.Interface
 BROADCAST = "ff:ff:ff:ff:ff:ff"
 sta_ap_list = []
 
-# Si jamais l'interface est down
-#os.system("ifconfig %s up" % IFACE_NAME)
-#Launch airodump-ng en background / screen permet de ne pas afficher sur la console le process passé en argument
-#p = subprocess.Popen(['screen','-d','-m','airodump-ng',IFACE_NAME])
 
-####################################
 ################## fonctions ##################
 
 def PacketHandler(pkt):
@@ -58,7 +61,6 @@ def PacketHandler(pkt):
                 sta_ap_list.append(sta_ap)
                 print(sta_ap[0] + "\t" + sta_ap[1])
 
-####################################
 ################## main ##################
             
 print("STA\t\t\tAP")

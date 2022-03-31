@@ -1,5 +1,16 @@
-#!/usr/bin/env python3 
-# TODO : J'arrive toujours pas a kill le processus avec une interruption..
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Created By  : Nicolas Hungerbühler & Lucas Gianinetti
+# Created Date: 31.03.22
+# ---------------------------------------------------------------------------
+# Ce programme génère des APs afin de faire une attaque de type flood SSID.
+# Il prend en paramètre une interface réseau (/!\ Doit être en mode
+# monitor channel hopping /!\), un fichier contenant des noms de SSID (un par
+# par ligne). Ensuite il génère un AP par nom contenu dans le fichier.
+# Si aucun fichier n'est passé en paramètre, il sera demandé à l'utilisateur
+# un nombre d'AP à générer.
+# ---------------------------------------------------------------------------
 
 import argparse
 import names
