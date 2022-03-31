@@ -190,6 +190,8 @@ Une cible pourrait se connecter  à notre faux AP à la place de l'AP qu'elle av
 
 **Fonctionnement:**
 
+```sudo pip install faker```
+
 ```sudo python3 2_fake_channel_evil_tween.py -i wlan0mon```
 
 ```sudo python3 2_fake_channel_evil_tween.py -i wlan0mon -t 50```
@@ -206,13 +208,19 @@ Une cible pourrait se connecter  à notre faux AP à la place de l'AP qu'elle av
 
   ![](.README_images/evilchanelverif.png)
 
-  //TODO Normalement on mettrait la même adresse MAC que l'AP spoofé ? Ou toute façon dans un vrai cas on doit mettre notre adresse MAC ?
+  Ici on met une adresse MAC random dans un vrai cas il faudra mettre l'adresse MAC de notre interface faisant l'AP. 
 
 ### 3. SSID flood attack
 
 Développer un script en Python/Scapy capable d'inonder la salle avec des SSID dont le nom correspond à une liste contenue dans un fichier text fournit par un utilisateur. Si l'utilisateur ne possède pas une liste, il peut spécifier le nombre d'AP à générer. Dans ce cas, les SSID seront générés de manière aléatoire.
 
 **Fonctionnement:**
+
+```sudo pip install faker```
+
+```sudo pip install thread```
+
+```sudo pip install names```
 
 ```sudo python3 3_SSID_flooding.py -i wlan0mon```
 
@@ -268,6 +276,8 @@ Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twi
 
 **Fonctionnement:**
 
+```sudo pip install faker```
+
 ```sudo python3 4_Detect_probeRequest_evil_tween.py -i wlan0mon -ssid McDo```
 
 ```sudo python3 4_Detect_probeRequest_evil_tween.py -i wlan0mon -ssid McDo -t 100```
@@ -294,6 +304,8 @@ Car les nouvelles versions randomisent leur adresse MAC, on ne peut donc pas ré
 a) Développer un script en Python/Scapy capable de lister toutes les STA qui cherchent activement un SSID donné
 
 **Fonctionnement:**
+
+```sudo pip install faker```
 
 ```sudo python3 5.a_Detection_probeRequest.py -i wlan0mon -ssid Wifi_Gratuit```
 
@@ -334,7 +346,7 @@ Développer un script en Python/Scapy capable de reveler le SSID correspondant �
 
 ```sudo python3 6_Detection_hidden_SSID.py -i wlan0mon -t 10000```
 
-On voit tout d'abord les BSSID qu'on a trouvé n'ayant pas de SSID, il faut maintenant attendre qu'une Probe Request arrive. Nous avons simulé l'AP hidden avec un téléphone Android, et nous avons pu nous y connecté ensuite pour trouver le SSID.
+On voit tout d'abord les BSSID qu'on a trouvé n'ayant pas de SSID, il faut maintenant attendre qu'une Probe Request arrive. Nous avons simulé l'AP hidden avec un téléphone Android, et nous avons pu nous y connecté (génération de la Probe Response) ensuite pour trouver le SSID.
 
 ![](./images/hiddenSSID.png)
 

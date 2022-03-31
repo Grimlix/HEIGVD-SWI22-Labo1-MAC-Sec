@@ -64,7 +64,7 @@ def PacketHandler(pkt):
                 power = pkt[0][RadioTap].Channel
 
                 #On met l'AP dans le tableau
-                ap_list.append(AP(BSSID,power, SSID,channel))
+                ap_list.append(AP(BSSID ,power,SSID ,channel))
 
 def evil_tween(ssid):
     faker = Faker()
@@ -91,6 +91,7 @@ def evil_tween(ssid):
     #build de la frame
     frame = RadioTap()/dot11/beacon/essid/rsn
 
+    #Affichage de la frame
     frame.show()
     print("\nHexDump of frame:")
     hexdump(frame)
