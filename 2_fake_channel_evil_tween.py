@@ -1,6 +1,15 @@
 #!/usr/bin/env python3 
-# TODO : J'arrive toujours pas a kill le processus avec une interruption..
-# TODO : Spoofer avec l'adresse MAC AUSSI de l'AP ????
+# -*- coding: utf-8 -*-
+#----------------------------------------------------------------------------
+# Created By  : Nicolas Hungerbühler & Lucas Gianinetti
+# Created Date: 31.03.22
+# ---------------------------------------------------------------------------
+# Ce programme prend en paramètre une interface réseau (/!\ Doit être en mode 
+# monitor channel hopping /!\) et optionnellement combien de temps il doit scanner 
+# Ce script scan les alentours pour des APs pendant un certain temps, si il
+# en trouve il les liste et propose d'en spoofer un. Il faut donner l'ID de l'AP
+# dans la liste. Le spoofing prend le même SSID et décale le canal de +/- 6. 
+# ---------------------------------------------------------------------------
 
 import argparse
 
@@ -72,7 +81,7 @@ def get_ap():
         beacon_channel = chan - 6
 
     #Retourne l'SSID de l'ap à spoof ainsi que le channel sur lequel il devrait être lancé
-    return ap_list[choice].SSID, chan
+    return ap_list[choice].SSID, beacon_channel
 
 def evil_tween():
     faker = Faker()
