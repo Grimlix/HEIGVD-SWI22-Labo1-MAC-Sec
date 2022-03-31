@@ -51,7 +51,7 @@ p = subprocess.Popen(['screen','-d','-m','airodump-ng',IFACE_NAME])
 
 def PacketHandler(pkt):
     # On veut un Beacon de type Probe Request 
-    if pkt.haslayer(Dot11Beacon) and pkt.type == 0 and pkt.subtype == 8:
+    if pkt.haslayer(Dot11Beacon):
 
             #Verification de doublon
             if pkt.addr2 not in check_list: 

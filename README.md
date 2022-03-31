@@ -151,18 +151,22 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 
 **Fonctionnement:**
 Installation et utilisation :
-* `sudo pip3 install scapy`
+
+* `sudo pip install scapy`
 * `python3 1_deauth.py -i <Interface name> -b <AP BSSID> -c <Client MAC address> [-n <Nombre de frames à envoyer>]`
 
 Tips :
-Un téléphone android peut être paramêtré en mode partage de connexion 2.4GHz avec adresse MAC fixe du téléphone
+Un téléphone android peut être paramêtré en mode partage de connexion 2.4GHz avec adresse MAC fixe du téléphone. Nous avons utilisé l'AP NicOPPO d'un téléphone Android. Pour connaître le BSSID nous avons utilisé la même commande expliquée auparavant :
 
-Dans l'exemple ci-dessous la commande suivante a été utilisée
-* `python3 1_deauth.py -i wlan0mon -b 5A:A6:39:CB:F4:70 -c A4:B1:C1:98:9D:0B -n 200`
+![](./images/nicOPPO.png)
 
-Ensuite le programme va demander quel type de reason code veut-on envoyer dans nos trames:
+Lancement du script, lors du lancement il nous demande quel type de Reason Code on veut utiliser, il faut utiliser le numéro :
 
-![](./images/deauth_fonctionnement.png)
+![](./images/command_deauth.png)
+
+ Nous avons lancé 200 paquets avec le Reason Code 4 ce qui nous a déauthentifier le laptop client, une pop-up demandant d'entrer à nouveau le mot de passe de l'AP est apparu. Nous avons fait une capture des 4-way handshake depuis wireshark et nous pouvons bien le confirmer :
+
+![](./images/wireshark_deauth.png)
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
@@ -182,7 +186,7 @@ Le code 8 c'est parce que la STA a trouvé un nouvel AP donc elle abandonne l'an
 
 __Question__ : Expliquer l'effet de cette attaque sur la cible
 
-Elle va se désauthentifier et va donc refaire un 4-way handshake afin de s'authentifier à nouveau.
+Elle va se désauthentifier et va donc refaire un 4-way handshake afin de s'authentifier à nouveau. Nous pouvons dans ce cas récup
 
 https://www.thepythoncode.com/article/force-a-device-to-disconnect-scapy
 
@@ -203,9 +207,11 @@ Une cible pourrait se connecter  à notre faux AP à la place de l'AP qu'elle av
 
 ```sudo pip install faker```
 
-```sudo python3 2_fake_channel_evil_tween.py -i wlan0mon```
+`sudo pip install scapy`
 
-```sudo python3 2_fake_channel_evil_tween.py -i wlan0mon -t 50```
+```sudo python3 2_fake_channel_evil_tween.py -i <Interface name>```
+
+```sudo python3 2_fake_channel_evil_tween.py -i <Interface name> -t <Time in seconds>```
 
 * Nous allons choisir de spoofer l'AP dont le SSID est **swissagnet**, son channel est le 6, donc on devrait spoofer un AP avec le même SSID, le channel 12 et la MAC 22:22:22:22:22:22 (valeur fixe utilisée pour différencier les deux APs)
 
@@ -233,9 +239,11 @@ Développer un script en Python/Scapy capable d'inonder la salle avec des SSID d
 
 ```sudo pip install names```
 
-```sudo python3 3_SSID_flooding.py -i wlan0mon```
+`sudo pip install scapy`
 
-```sudo python3 3_SSID_flooding.py -i wlan0mon -f file.txt``` 
+```sudo python3 3_SSID_flooding.py -i <Interface name>```
+
+```sudo python3 3_SSID_flooding.py -i <Interface name> -f <File>``` 
 
 On a lancé le code avec génération de 3 SSID aléatoires.
 
@@ -289,17 +297,21 @@ Pour la détection du SSID, vous devez utiliser Scapy. Pour proposer un evil twi
 
 ```sudo pip install faker```
 
-```sudo python3 4_Detect_probeRequest_evil_tween.py -i wlan0mon -ssid McDo```
+`sudo pip install scapy`
 
-```sudo python3 4_Detect_probeRequest_evil_tween.py -i wlan0mon -ssid McDo -t 100```
+```sudo python3 4_Detect_probeRequest_evil_tween.py -i <Interface name> ```
 
-Nous commençons par lancer le programme avec un temps de recherche de 30 secondes (par default) et le SSID McDo. Et j'essaie de me connecter avec mon téléphone sur le SSID McDo pour simuler une recherche active d'un SSID. Voici le résultat :
+```sudo python3 4_Detect_probeRequest_evil_tween.py -i <Interface name> -t <Time in seconds>```
 
-![](./images/mcdodetect.png)
+Nous commençons par lancer le programme avec un temps de recherche de 30 secondes (par default). Il me demande si je veut lancer un evil tween du SSID trouvé.
 
-Le programme me demande si je veux en créer un evil tween, ce que je fais. On voit ensuite McDo dans ma liste des réseaux disponibles :
+![](./images/4.script.png)
 
-![](./images/mcdodetect2.png)
+Pour vérifier l'evil tween on lui a mis un BSSID de **22:22:22:22:22:22**, et on lance le script de scanning pour voir les SSID alentours :
+
+![](./images/scan4.png)
+
+L'evil tween est bien présent.
 
 __Question__ : comment ça se fait que ces trames puissent être lues par tout le monde ? Ne serait-il pas plus judicieux de les chiffrer ?
 
@@ -318,11 +330,15 @@ a) Développer un script en Python/Scapy capable de lister toutes les STA qui ch
 
 ```sudo pip install faker```
 
-```sudo python3 5.a_Detection_probeRequest.py -i wlan0mon -ssid Wifi_Gratuit```
+`sudo pip install scapy`
 
-Comme pour la partie 4, on a juste essayé de se connecter manuellement depuis un téléphone et un ordinateur après avoir lancé le script.
+```sudo python3 5.a_Detection_probeRequest.py -i <Interface name> -ssid <SSID name>```
 
-![](./images/test33.png)
+Nous commençons par lancer le programme avec un temps de recherche de 30 secondes (par default) et le SSID McDo. Et j'essaie de me connecter avec mon téléphone sur le SSID McDo pour simuler une recherche active d'un SSID. Voici le résultat :
+
+![](./images/mcdodetect.png)
+
+La recherche fonctionne correctement.
 
 b) Développer un script en Python/Scapy capable de générer une liste d'AP visibles dans la salle et de STA détectés et déterminer quelle STA est associée à quel AP. Par exemple :
 
@@ -353,9 +369,9 @@ Développer un script en Python/Scapy capable de reveler le SSID correspondant �
 
 **Fonctionnement:**
 
-```sudo python3 6_Detection_hidden_SSID.py -i wlan0mon```
+```sudo python3 6_Detection_hidden_SSID.py -i <Interface name>```
 
-```sudo python3 6_Detection_hidden_SSID.py -i wlan0mon -t 10000```
+```sudo python3 6_Detection_hidden_SSID.py -i <Interface name> -t <Time in seconds>```
 
 On voit tout d'abord les BSSID qu'on a trouvé n'ayant pas de SSID, il faut maintenant attendre qu'une Probe Request arrive. Nous avons simulé l'AP hidden avec un téléphone Android, et nous avons pu nous y connecté (génération de la Probe Response) ensuite pour trouver le SSID.
 

