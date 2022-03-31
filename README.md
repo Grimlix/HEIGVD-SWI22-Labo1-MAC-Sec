@@ -1,3 +1,6 @@
+Nicolas Hungerbühler & Lucas Gianinetti
+___
+
 # Sécurité des réseaux sans fil
 
 ## Laboratoire 802.11 sécurité MAC
@@ -220,19 +223,19 @@ Une cible pourrait se connecter  à notre faux AP à la place de l'AP qu'elle av
 
 ```sudo python3 2_fake_channel_evil_tween.py -i <Interface name> -t <Time in seconds>```
 
-* Nous allons choisir de spoofer l'AP dont le SSID est **swissagnet**, son channel est le 6, donc on devrait spoofer un AP avec le même SSID, le channel 12 et la MAC 22:22:22:22:22:22 (valeur fixe utilisée pour différencier les deux APs)
+* Nous allons choisir de spoofer l'AP dont le SSID est **netplus-6e8440**,et on devrait spoofer un AP avec le même SSID, et un autre MAC (généré aléatoirement)
 
 * La frame pour spoofer l'AP est ensuite envoyée en continue
 
-  ![](.README_images/evilchanel.png)
+  ![](.README_images/evilchannel.png)
 
 * Pour vérifier que cela fonctionne, on lance en parallèle un autre scan `Scan.py` qui fonctionne de la même façon pour découvrir les APs à proximité.
 
-* Nous voyons bien qu'il y a un deuxième AP dont l'SSID est **swissagnet** sur le channel 12 avec l'adresse MAC 22:22:22:22:22:22
+* Nous voyons bien qu'il y a un deuxième AP dont l'SSID est **netplus-6e8440** avec une adresse MAC différente
 
-  ![](.README_images/evilchanelverif.png)
+  ![](.README_images/evilchannelverif.png)
 
-  Ici on met une adresse MAC random dans un vrai cas il faudra mettre l'adresse MAC de notre interface faisant l'AP. 
+  Ici on met une adresse MAC random, on pourrait reprendre l'adresse MAC de l'AP qu'on spoof.
 
 ### 3. SSID flood attack
 
