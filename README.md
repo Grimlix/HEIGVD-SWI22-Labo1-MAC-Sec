@@ -150,8 +150,19 @@ b) Développer un script en Python/Scapy capable de générer et envoyer des tra
 * 8 - Deauthenticated because sending STA is leaving BSS
 
 **Fonctionnement:**
+Installation et utilisation :
+* `sudo pip3 install scapy`
+* `python3 1_deauth.py -i <Interface name> -b <AP BSSID> -c <Client MAC address> [-n <Nombre de frames à envoyer>]`
 
-//TODO
+Tips :
+Un téléphone android peut être paramêtré en mode partage de connexion 2.4GHz avec adresse MAC fixe du téléphone
+
+Dans l'exemple ci-dessous la commande suivante a été utilisée
+* `python3 1_deauth.py -i wlan0mon -b 5A:A6:39:CB:F4:70 -c A4:B1:C1:98:9D:0B -n 200`
+
+Ensuite le programme va demander quel type de reason code veut-on envoyer dans nos trames:
+
+![](./images/deauth_fonctionnement.png)
 
 __Question__ : quels codes/raisons justifient l'envoie de la trame à la STA cible et pourquoi ?
 
